@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Polly;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -23,8 +24,10 @@ namespace ReverseProxyApplication
             if (targetUri != null)
             {
                 var targetRequestMessage = CreateTargetMessage(context, targetUri);
+                var politicaReintentos = Policy.Handle<Exception>().WaitAndRetryAsync(3, intentos => TimeSpan.FromSeconds(Math.Pow(2, intentos)));
 
-                using (var responseMessage = await _httpClient.SendAsync(targetRequestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted))
+                using (var responseMessage = await politicaReintentos.ExecuteAsync(async () =>
+                    await _httpClient.SendAsync(targetRequestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted)))
                 {
                     context.Response.StatusCode = (int)responseMessage.StatusCode;
 
