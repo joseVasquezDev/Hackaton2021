@@ -11,6 +11,7 @@ namespace ReverseProxyApplication
         public void ConfigureServices(IServiceCollection services)
         {
             // Method intentionally left empty.
+            services.AddHealthChecks();
             services.AddSingleton<LocalMemoryCache>();
         }
 
@@ -21,6 +22,8 @@ namespace ReverseProxyApplication
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseHealthChecks("/healthz");
 
             app.UseMiddleware<ReverseProxyMiddleware>();
         }
