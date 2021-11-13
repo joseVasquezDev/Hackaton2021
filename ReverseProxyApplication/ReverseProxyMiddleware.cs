@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
+using Polly;
 using System;
 using System.Linq;
 using System.Net;
@@ -35,8 +36,11 @@ namespace ReverseProxyApplication
                 }
 
                 var targetRequestMessage = CreateTargetMessage(context, targetUri);
+                var politicaReintentos = Policy.Handle<Exception>().WaitAndRetryAsync(3, intentos => TimeSpan.FromSeconds(Math.Pow(2, intentos)));
 
-                using var responseMessage = await _httpClient.SendAsync(targetRequestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted);
+                using var responseMessage = await politicaReintentos.ExecuteAsync(async () =>
+                    await _httpClient.SendAsync(targetRequestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted));
+
                 context.Response.StatusCode = (int)responseMessage.StatusCode;
 
                 CopyFromTargetResponseHeaders(context, responseMessage);
@@ -68,7 +72,7 @@ namespace ReverseProxyApplication
             if (context.Response.StatusCode == (int)HttpStatusCode.OK)
             {
                 string cacheKey = context.Request.QueryString.Value;
-                
+
                 var contentEntry = await responseMessage.Content.ReadFromJsonAsync<ResponseModels>();
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
                        .SetSize(1)
