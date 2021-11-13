@@ -147,7 +147,11 @@ namespace ReverseProxyApplication
 
         private static Uri BuildTargetUri(HttpRequest request)
         {
-            return new Uri($"http://api-0.hack.local/{request.QueryString.Value}");
+            //return new Uri($"http://api-0.hack.local/{request.QueryString.Value}");
+            string hostName = Environment.GetEnvironmentVariable("SVC_API_HOSTNAME");
+            string port = Environment.GetEnvironmentVariable("SVC_API_PORT");
+            string urlString = string.Format("http://{0}:{1}/{2}", hostName, port, request.QueryString.Value);
+            return new Uri(urlString);
         }
     }
 }
