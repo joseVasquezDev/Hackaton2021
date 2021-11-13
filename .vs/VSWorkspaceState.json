@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\ReverseProxyApplication"
   ],
-  "SelectedNode": "\\ReverseProxyApplication.sln",
+  "SelectedNode": "\\ReverseProxyApplication\\ReverseProxyMiddleware.cs",
   "PreviewInSolutionExplorer": false
 }
