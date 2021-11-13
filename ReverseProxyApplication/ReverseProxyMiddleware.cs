@@ -30,10 +30,10 @@ namespace ReverseProxyApplication
 
             if (targetUri != null)
             {
-                if (await CheckCachedRequestAsync(context))
-                {
-                    return;
-                }
+                //if (await CheckCachedRequestAsync(context))
+                //{
+                //    return;
+                //}
 
                 var targetRequestMessage = CreateTargetMessage(context, targetUri);
                 var politicaReintentos = Policy.Handle<Exception>().WaitAndRetryAsync(3, intentos => TimeSpan.FromSeconds(Math.Pow(2, intentos)));
@@ -46,7 +46,7 @@ namespace ReverseProxyApplication
                 CopyFromTargetResponseHeaders(context, responseMessage);
 
                 await ProcessResponseContent(context, responseMessage);
-                await ProcessResponseCache(context, responseMessage);
+                //await ProcessResponseCache(context, responseMessage);
 
                 return;
             }
