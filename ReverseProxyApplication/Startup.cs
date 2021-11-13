@@ -11,6 +11,7 @@ namespace ReverseProxyApplication
         public void ConfigureServices(IServiceCollection services)
         {
             // Method intentionally left empty.
+            services.AddSingleton<LocalMemoryCache>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
