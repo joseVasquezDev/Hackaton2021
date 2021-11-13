@@ -1,13 +1,11 @@
 # Propuesta de la solucion para hackaton ceiba 2021
 ## Descripcion de la solucion 
-This is a .NET Core 2 sample project showing how to implement a custom reverse proxy, as described in the article [Building a Reverse Proxy in .NET Core](https://auth0.com/blog/building-a-reverse-proxy-in-dot-net-core/).
-
+Se implementa una solución basada en un patrón proxy reverso, para consumir las peticiones del cliente. 
+Para optimizar el tiempo de respuesta en las peticiones, se implementó un caché en memoria, para minimizar el numero de peticiones fallidas se implementó una política de reintentos, con 3 reintentos, con una base para el primer intento de 2 seg y luego se realizan de manera exponencial.
 
 ## Drivers de la aplicación
+Resiliencia con la política de reintentos, Usabilidad con la implemnetación de la memoria en caché.
 
-You can run the Web application from Visual Studio or by typing `dotnet run` in a command window.
-
-When the application is running, you can point your browser to `localhost:5001` and access a Google form without leaving the `localhost` domain.
 
 # Diagrama de la solución.
 
